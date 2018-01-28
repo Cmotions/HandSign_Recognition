@@ -2,5 +2,12 @@
 - automatische ruis toevoegen aan eigen foto's om trainingsset te vergroten
 - algoritme predictie laten doen (testset) en beoordelen hoe goed hij scoort
 - algoritme predictie laten doen vanaf beelden van de webcam
+
+- keras, cv2 en overige packages installeren op Azure
+- Azure machine aantal processoren uitbreiden (vragen Hidde)
+- scripts werkend maken op Azure machine
+
 - verschillende algoritmes uitproberen (wat zijn de voordelen/nadelen)
 - frontend maken
+
+- test draaien van meedere modellen tegelijkertijd (zelfde aantal als uiteindelijke aantal groepjes)
