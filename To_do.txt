@@ -1,0 +1,6 @@
+- eigen foto's laden inclusief label
+- automatische ruis toevoegen aan eigen foto's om trainingsset te vergroten
+- algoritme predictie laten doen (testset) en beoordelen hoe goed hij scoort
+- algoritme predictie laten doen vanaf beelden van de webcam
+- verschillende algoritmes uitproberen (wat zijn de voordelen/nadelen)
+- frontend maken
