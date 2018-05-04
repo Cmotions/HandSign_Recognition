@@ -14,6 +14,7 @@ from __future__ import print_function
 
 import argparse
 #from datetime import datetime
+import time
 import hashlib
 import os.path
 import random
@@ -33,6 +34,8 @@ from tensorflow.python.util import compat
 
 FLAGS = None
 
+image_folder = 'D:/Documents/GitHub/HandSign_Recognition/00 Data/own_data_test_pretrained_model/'
+
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
 # sizes. If you want to adapt this script to work with another model, you will
@@ -41,8 +44,8 @@ DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-
 
 BOTTLENECK_TENSOR_NAME = 'pool_3/_reshape:0'
 BOTTLENECK_TENSOR_SIZE = 2048
-MODEL_INPUT_WIDTH = 299
-MODEL_INPUT_HEIGHT = 299
+MODEL_INPUT_WIDTH = 64 #299
+MODEL_INPUT_HEIGHT = 48 #299
 MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
@@ -866,11 +869,15 @@ def main(_):
 
 
 if __name__ == '__main__':
+    
+    print('start: ', str(time.ctime()), '\n')
+    start = time.time()
+    
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--image_dir',
         type=str,
-        default='',
+        default=image_folder,
         help='Path to folders of labeled images.'
         )
     parser.add_argument(
@@ -1020,3 +1027,6 @@ if __name__ == '__main__':
         )
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+    
+    print('finish: ', str(time.ctime()), '\n')
+    print("this took --- %s seconds ---" % round(time.time() - start, 2))

@@ -55,9 +55,16 @@ with tf.Session() as sess:
     while True:
         ret, img = cap.read()
         img = cv2.flip(img, 1)
+        
+        #print(img.shape)
+        
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        
         if ret:
-            x1, y1, x2, y2 = 100, 100, 300, 300
-            img_cropped = img[y1:y2, x1:x2]
+            #x1, y1, x2, y2 = 100, 100, 300, 300
+            #img_cropped = img[y1:y2, x1:x2]
+            img_cropped = img
 
             c += 1
             image_data = cv2.imencode('.jpg', img_cropped)[1].tostring()
@@ -70,7 +77,7 @@ with tf.Session() as sess:
                     consecutive += 1
                 else:
                     consecutive = 0
-                if consecutive == 2 and res not in ['nothing']:
+                if consecutive == 2 and res not in ['nothing'] and score > .7:
                     if res == 'space':
                         sequence += ' '
                     elif res == 'del':
@@ -82,7 +89,7 @@ with tf.Session() as sess:
             cv2.putText(img, '%s' % (res.upper()), (100,400), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 4)
             cv2.putText(img, '(score = %.5f)' % (float(score)), (100,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255))
             mem = res
-            cv2.rectangle(img, (x1, y1), (x2, y2), (255,0,0), 2)
+            #cv2.rectangle(img, (x1, y1), (x2, y2), (255,0,0), 2)
             cv2.imshow("img", img)
             img_sequence = np.zeros((200,1200,3), np.uint8)
             cv2.putText(img_sequence, '%s' % (sequence.upper()), (30,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)

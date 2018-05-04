@@ -7,7 +7,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import tensorflow as tf
 
-image_path = sys.argv[1]
+image_path = 'D:/Documents/GitHub/HandSign_Recognition/00 Data/TEST/label_F _0_131.png' #sys.argv[1]
 
 # Read the image_data
 image_data = tf.gfile.FastGFile(image_path, 'rb').read()
