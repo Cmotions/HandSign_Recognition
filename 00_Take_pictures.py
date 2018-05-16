@@ -1,15 +1,17 @@
-import sys
-import os
+#import sys
+#import os
 
-import matplotlib
-import numpy as np
-import matplotlib.pyplot as plt
-import copy
+#import matplotlib
+#import numpy as np
+#import matplotlib.pyplot as plt
+#import copy
 import cv2
 
-imgloc = '00 Data'
+imgloc = '00 Data/pictures'
 startnumber = 1
-cap = cv2.VideoCapture(1)
+webcamchannel = 1
+
+cap = cv2.VideoCapture(webcamchannel)
 
 while True:
     ret, img = cap.read()
@@ -36,4 +38,4 @@ while True:
 
 # Following line should appear but is not working with opencv-python package
 # cv2.destroyAllWindows() 
-cv2.VideoCapture(1).release()
+cv2.VideoCapture(webcamchannel).release()
