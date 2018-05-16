@@ -11,6 +11,11 @@ import cv2
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import tensorflow as tf
 
+
+# define the minimum certainty of the prediction
+threshold = .7
+
+
 def predict(image_data):
 
     predictions = sess.run(softmax_tensor, \
@@ -29,9 +34,11 @@ def predict(image_data):
             res = human_string
     return res, max_score
 
+    
 # Loads label file, strips off carriage return
 label_lines = [line.rstrip() for line
                    in tf.gfile.GFile("logs/output_labels.txt")]
+
 
 # Unpersists graph from file
 with tf.gfile.FastGFile("logs/output_graph.pb", 'rb') as f:
@@ -39,6 +46,7 @@ with tf.gfile.FastGFile("logs/output_graph.pb", 'rb') as f:
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
 
+    
 with tf.Session() as sess:
     # Feed the image_data as input to the graph and get first prediction
     softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
@@ -62,9 +70,9 @@ with tf.Session() as sess:
         img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         
         if ret:
-            #x1, y1, x2, y2 = 100, 100, 300, 300
-            #img_cropped = img[y1:y2, x1:x2]
-            img_cropped = img
+            x1, y1, x2, y2 = 100, 100, 300, 300
+            img_cropped = img[y1:y2, x1:x2]
+            #img_cropped = img
 
             c += 1
             image_data = cv2.imencode('.jpg', img_cropped)[1].tostring()
@@ -73,11 +81,11 @@ with tf.Session() as sess:
                 res_tmp, score = predict(image_data)
                 res = res_tmp
                 i = 0
-                if mem == res:
+                if mem == res and score > threshold:
                     consecutive += 1
                 else:
                     consecutive = 0
-                if consecutive == 2 and res not in ['nothing'] and score > .7:
+                if consecutive == 2 and res not in ['nothing']:
                     if res == 'space':
                         sequence += ' '
                     elif res == 'del':
