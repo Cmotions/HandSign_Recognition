@@ -1,15 +1,8 @@
-#import sys
-#import os
-
-#import matplotlib
-#import numpy as np
-#import matplotlib.pyplot as plt
-#import copy
 import cv2
 
 imgloc = '00 Data/pictures'
 startnumber = 1
-webcamchannel = 1
+webcamchannel = 2
 
 cap = cv2.VideoCapture(webcamchannel)
 
@@ -29,7 +22,8 @@ while True:
         cv2.imshow("img", img)
         
         # check if enter is pressed
-        if cv2.waitKey(1) == 13:
+        key = cv2.waitKey(1)
+        if  key == 13:
             cv2.imwrite(imgloc + '/picture_'+ str(startnumber) + '.jpg', img_cropped)
             print('image is saved!')
             startnumber += 1

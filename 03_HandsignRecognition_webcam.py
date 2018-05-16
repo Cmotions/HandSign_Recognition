@@ -15,6 +15,9 @@ import tensorflow as tf
 # define the minimum certainty of the prediction
 threshold = .7
 
+# define the webcam channel
+webcamchannel = 2
+
 
 def predict(image_data):
 
@@ -53,7 +56,7 @@ with tf.Session() as sess:
 
     c = 0
 
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(webcamchannel)
 
     res, score = '', 0.0
     i = 0
@@ -62,7 +65,7 @@ with tf.Session() as sess:
     sequence = ''
     while True:
         ret, img = cap.read()
-        img = cv2.flip(img, 1)
+        #img = cv2.flip(img, 1)
         
         #print(img.shape)
         
@@ -77,6 +80,11 @@ with tf.Session() as sess:
             c += 1
             image_data = cv2.imencode('.jpg', img_cropped)[1].tostring()
             a = cv2.waitKey(33)
+            
+            # check if enter is pressed
+            if  a == 8:
+                sequence = sequence[:-1]
+            
             if i == 4:
                 res_tmp, score = predict(image_data)
                 res = res_tmp
@@ -97,7 +105,7 @@ with tf.Session() as sess:
             cv2.putText(img, '%s' % (res.upper()), (100,400), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 4)
             cv2.putText(img, '(score = %.5f)' % (float(score)), (100,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255))
             mem = res
-            #cv2.rectangle(img, (x1, y1), (x2, y2), (255,0,0), 2)
+            cv2.rectangle(img, (x1, y1), (x2, y2), (255,0,0), 2)
             cv2.imshow("img", img)
             img_sequence = np.zeros((200,1200,3), np.uint8)
             cv2.putText(img_sequence, '%s' % (sequence.upper()), (30,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
@@ -107,4 +115,4 @@ with tf.Session() as sess:
 
 # Following line should appear but is not working with opencv-python package
 # cv2.destroyAllWindows() 
-cv2.VideoCapture(0).release()
+cv2.VideoCapture(webcamchannel).release()
