@@ -2,7 +2,7 @@ import cv2
 
 imgloc = '00 Data/pictures'
 startnumber = 1
-webcamchannel = 2
+webcamchannel = 1
 
 cap = cv2.VideoCapture(webcamchannel)
 
@@ -25,8 +25,12 @@ while True:
         key = cv2.waitKey(1)
         if  key == 13:
             cv2.imwrite(imgloc + '/picture_'+ str(startnumber) + '.jpg', img_cropped)
-            print('image is saved!')
+            print('image ' + str(startnumber) + ' is saved!')
             startnumber += 1
+        # check if backspace is pressed
+        elif key == 8:
+            cv2.destroyAllWindows() 
+            cv2.VideoCapture(webcamchannel).release()
     else:
         break
 
