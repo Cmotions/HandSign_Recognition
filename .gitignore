@@ -1,4 +1,5 @@
 images/
 00 Data/
 images*/
-logs/
+logs*/
+*.zip
