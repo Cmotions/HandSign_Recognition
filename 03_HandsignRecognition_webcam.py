@@ -104,8 +104,8 @@ with tf.Session() as sess:
                     consecutive = 0
             i += 1
             
-            cv2.putText(img, '%s' % (res.upper()), (100,400), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 4)
-            cv2.putText(img, '(score = %.5f)' % (float(score)), (100,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255))
+            cv2.putText(img, '%s' % (res.upper()), (100,400), cv2.FONT_HERSHEY_SIMPLEX, 4, (0,0,0), 4)
+            cv2.putText(img, '(score = %.5f)' % (float(score)), (100,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
             mem = res
             cv2.rectangle(img, (x1, y1), (x2, y2), (255,0,0), 2)
             cv2.imshow("img", img)
