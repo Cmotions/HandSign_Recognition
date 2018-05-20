@@ -63,6 +63,7 @@ with tf.Session() as sess:
     mem = ''
     consecutive = 0
     sequence = ''
+    
     while True:
         ret, img = cap.read()
         #img = cv2.flip(img, 1)
@@ -81,7 +82,7 @@ with tf.Session() as sess:
             image_data = cv2.imencode('.jpg', img_cropped)[1].tostring()
             a = cv2.waitKey(33)
             
-            # check if enter is pressed
+            # check if backspace is pressed
             if  a == 8:
                 sequence = sequence[:-1]
             
@@ -102,6 +103,7 @@ with tf.Session() as sess:
                         sequence += res
                     consecutive = 0
             i += 1
+            
             cv2.putText(img, '%s' % (res.upper()), (100,400), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 4)
             cv2.putText(img, '(score = %.5f)' % (float(score)), (100,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255))
             mem = res
@@ -110,9 +112,10 @@ with tf.Session() as sess:
             img_sequence = np.zeros((200,1200,3), np.uint8)
             cv2.putText(img_sequence, '%s' % (sequence.upper()), (30,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
             cv2.imshow('sequence', img_sequence)
+            
         else:
             break
 
-# Following line should appear but is not working with opencv-python package
-# cv2.destroyAllWindows() 
+# Sluit alle geopende schermen
+cv2.destroyAllWindows() 
 cv2.VideoCapture(webcamchannel).release()
