@@ -4,7 +4,7 @@ import cv2
 # define variables
 imgloc = '00 Data/pictures'     # the location where the pictures will be saved
 startnumber = 1                 # the first number of the picture   
-webcamchannel = 2               # the channel where the webcam can be found 
+webcamchannel = 0               # the channel where the webcam can be found 
                                 # (usually the webcam at the front of your laptop is channel 0)
 
 # start the stream
@@ -18,11 +18,11 @@ while True:
     ret, img = cap.read()
     
     # flip the image
-    #img = cv2.flip(img, 1)
+    img = cv2.flip(img, 1)
     
     # correct/adapt the image colors
-    #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
-    #img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     
     # check if the camera works
     if ret:

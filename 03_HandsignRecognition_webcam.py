@@ -13,11 +13,14 @@ import tensorflow as tf
 
 
 # define the minimum certainty of the prediction
-threshold = .7
+threshold = .4
 
 # define the webcam channel
-webcamchannel = 2
+webcamchannel = 0
 
+# top k results that are shown at the screen
+k = 5
+top_k_print = ''
 
 def predict(image_data):
 
@@ -29,13 +32,22 @@ def predict(image_data):
 
     max_score = 0.0
     res = ''
+    
+    # create an empty array
+    top_k_print = ''
+    
     for node_id in top_k:
         human_string = label_lines[node_id]
         score = predictions[0][node_id]
+        
+        if node_id < k:
+            top_k_print = top_k_print + human_string.upper() + ' with a score of: ' + str(score) + '\n'
+        
         if score > max_score:
             max_score = score
             res = human_string
-    return res, max_score
+    
+    return res, max_score, top_k_print
 
     
 # Loads label file, strips off carriage return
@@ -66,9 +78,7 @@ with tf.Session() as sess:
     
     while True:
         ret, img = cap.read()
-        #img = cv2.flip(img, 1)
-        
-        #print(img.shape)
+        img = cv2.flip(img, 1)
         
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
         img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -87,9 +97,12 @@ with tf.Session() as sess:
                 sequence = sequence[:-1]
             
             if i == 4:
-                res_tmp, score = predict(image_data)
+                res_tmp, score, top_k_print = predict(image_data)
                 res = res_tmp
                 i = 0
+                
+                #print(top_k_print)
+                
                 if mem == res and score > threshold:
                     consecutive += 1
                 else:
@@ -104,14 +117,41 @@ with tf.Session() as sess:
                     consecutive = 0
             i += 1
             
+            # add a new line when the current line contains (a multiple of) 60 signs
+            if len(sequence) > 0 and len(sequence) % 60 == 0:
+                # add an enter to resume on the next line
+                print('add enter')
+                sequence += '\n'
+            
             cv2.putText(img, '%s' % (res.upper()), (100,400), cv2.FONT_HERSHEY_SIMPLEX, 4, (0,0,0), 4)
             cv2.putText(img, '(score = %.5f)' % (float(score)), (100,450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+            
             mem = res
+            
             cv2.rectangle(img, (x1, y1), (x2, y2), (255,0,0), 2)
             cv2.imshow("img", img)
+            
             img_sequence = np.zeros((200,1200,3), np.uint8)
-            cv2.putText(img_sequence, '%s' % (sequence.upper()), (30,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            
+            # cut the sequence in different lines when relevant
+            y0, dy, n = 30, 4, 1
+            for seq in sequence.split('\n'):
+                y = y0 + n * dy
+                n += 10
+                cv2.putText(img_sequence, '%s' % (seq.upper()), (30,y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            
             cv2.imshow('sequence', img_sequence)
+            
+            
+            img_sequence2 = np.zeros((250,600,3), np.uint8)
+            # cut the sequence in different lines when relevant
+            y0, dy, n = 30, 4, 1
+            for seq in top_k_print.split('\n'):
+                y = y0 + n * dy
+                n += 10
+                cv2.putText(img_sequence2, '%s' % (seq.upper()), (30,y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            
+            cv2.imshow('Top ' + str(k), img_sequence2)
             
         else:
             break
